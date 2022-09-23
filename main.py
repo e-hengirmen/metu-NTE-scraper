@@ -59,6 +59,7 @@ action = ActionChains(driver)
 
 
 #################################
+'''
 driver.get(NTE_URL)
 rows = driver.find_elements(By.XPATH,'//*[@id="content"]/article/div[2]/table/tbody/tr')
 for i in rows:
@@ -88,6 +89,7 @@ for i in rows:
 
 end = time.time()
 print("all NTEs recorded in : ",end-start," seconds")
+'''
 #################################
 
 
@@ -107,7 +109,7 @@ for class_code in class_codes:
         first_time = False
         # all entries selected
         drop_mask = WebDriverWait(driver, 10).until(
-            EC.element_to_be_clickable((By.XPATH, '//*[@id="s2id_autogen4"]/a')))
+            EC.element_to_be_clickable((By.ID, 's2id_autogen4')))
         driver.execute_script("arguments[0].scrollIntoView()",
                               driver.find_element(By.XPATH, '//*[@id="row_"]/div/div/div[2]/div/div[1]/div[2]'))
         action.move_to_element(drop_mask).click().perform()
@@ -121,11 +123,11 @@ for class_code in class_codes:
             EC.element_to_be_clickable((By.XPATH, '//*[@id="okzTools_SearchResults"]/div')))
         column.click()
         WebDriverWait(driver, 10).until(
-            EC.element_to_be_clickable((By.XPATH, '//*[@id="SearchResults_column_toggler"]/label[1]'))).click()
+            EC.element_to_be_clickable((By.XPATH, '//*[@id="SearchResults_column_toggler"]/label[1]/div'))).click()
         WebDriverWait(driver, 10).until(
-            EC.element_to_be_clickable((By.XPATH, '//*[@id="SearchResults_column_toggler"]/label[7]'))).click()
+            EC.element_to_be_clickable((By.XPATH, '//*[@id="SearchResults_column_toggler"]/label[7]/div'))).click()
         WebDriverWait(driver, 10).until(
-            EC.element_to_be_clickable((By.XPATH, '//*[@id="SearchResults_column_toggler"]/label[8]'))).click()
+            EC.element_to_be_clickable((By.XPATH, '//*[@id="SearchResults_column_toggler"]/label[8]/div'))).click()
 
     # print department name
     dep_name=WebDriverWait(driver, 10).until(
