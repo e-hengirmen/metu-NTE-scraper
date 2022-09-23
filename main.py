@@ -67,7 +67,8 @@ for i in rows:
     class_code=write_num(cols[0].text)
     if (int(class_code)>=603 and int(class_code)<=639):
         continue
-    i.click()
+    driver.execute_script("arguments[0].scrollIntoView();", cols[0])
+    cols[0].click()
 
     if(int(class_code)!=602):
         course_table=WebDriverWait(driver,10).until(EC.presence_of_all_elements_located((By.XPATH,'//*[@id="content"]/article/div[2]/table/tbody/tr')))[1:]
