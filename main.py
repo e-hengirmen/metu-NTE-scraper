@@ -88,3 +88,57 @@ for i in rows:
 end = time.time()
 print("all NTEs recorded in : ",end-start," seconds")
 #################################
+
+
+first_time = True
+for class_code in class_codes:
+
+    old_url = driver.current_url
+    driver.get(url1 + site_package + url2 + class_code + url3)
+    WebDriverWait(driver, 10).until(lambda url_check: driver.current_url != old_url)
+    driver.find_element(By.TAG_NAME, 'body').send_keys(Keys.CONTROL + Keys.HOME)
+
+    # searched
+    WebDriverWait(driver, 10).until(EC.element_to_be_clickable(("xpath", '//*[@id="submitSearchForm"]'))).click()
+    time.sleep(0.5)
+
+    if first_time:
+        first_time = False
+        # all entries selected
+        drop_mask = WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable((By.XPATH, '//*[@id="s2id_autogen4"]/a')))
+        driver.execute_script("arguments[0].scrollIntoView()",
+                              driver.find_element(By.XPATH, '//*[@id="row_"]/div/div/div[2]/div/div[1]/div[2]'))
+        action.move_to_element(drop_mask).click().perform()
+
+        drop_button = WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable((By.XPATH, '//*[@id="select2-drop"]/ul/li[4]/div')))
+        action.move_to_element(drop_button).click().perform()
+
+        # columns
+        column = WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable((By.XPATH, '//*[@id="okzTools_SearchResults"]/div')))
+        column.click()
+        WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable((By.XPATH, '//*[@id="SearchResults_column_toggler"]/label[1]'))).click()
+        WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable((By.XPATH, '//*[@id="SearchResults_column_toggler"]/label[7]'))).click()
+        WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable((By.XPATH, '//*[@id="SearchResults_column_toggler"]/label[8]'))).click()
+
+    # print department name
+    dep_name=WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.XPATH, '//*[@id="s2id_selectProgram"]/a/span[1]'))).text
+    print(dep_name)
+
+    # print table
+    table = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, 'SearchResults'))).text
+    for row in table.splitlines()[1:]:
+        if len(row)>7 and (row[:7] in course_set):
+            print(row)
+    print("")
+
+driver.quit()
+
+end = time.time()
+print("done ",end-start," seconds")
