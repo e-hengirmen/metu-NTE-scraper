@@ -59,7 +59,6 @@ action = ActionChains(driver)
 
 
 #################################
-'''
 driver.get(NTE_URL)
 rows = driver.find_elements(By.XPATH,'//*[@id="content"]/article/div[2]/table/tbody/tr')
 for i in rows:
@@ -89,7 +88,6 @@ for i in rows:
 
 end = time.time()
 print("all NTEs recorded in : ",end-start," seconds")
-'''
 #################################
 
 
