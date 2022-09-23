@@ -1,4 +1,5 @@
 import time
+import datetime
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.select import Select
@@ -6,6 +7,10 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
+
+now = datetime.datetime.now()
+print ("Up to date as of : ")
+print (now.strftime("%Y-%m-%d %H:%M:%S\n"))
 
 start = time.time()
 
