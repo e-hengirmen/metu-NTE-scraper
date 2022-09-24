@@ -3,8 +3,8 @@ Metu NTE scraper project was created for educational proposes and community need
 ## Getting Started
 These instructions will help you list Non-Technical Elective courses given to your department in the current semester
 ## Prerequisites
-Python 3.x\
-Google Chrome\ 
+Python 3.x  
+Google Chrome   
 selenium - An API for python to write functional/acceptance tests using Selenium WebDriver.
 
 you can install selenium with either pip:
