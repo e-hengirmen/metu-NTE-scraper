@@ -33,7 +33,7 @@ after this you can check chromedriver version with:
 chromedriver --version
 ```
 ## Options
-Before running the code make sure you change the below variables inside 'main.py' to neccessary values:
+Before running the code make sure you change the below variables inside `main.py` to neccessary values:
 * dept_code (contains department code to help find courses given to that department)(default value set for ceng change it to your department's code)
 * class_codes (contains departments that give NTE courses)(you can delete those that you dont want in your list)
 * semester (contains year and semester for example currently set to 20221 meaning 2022-2023 fall)(change according to current semester)
