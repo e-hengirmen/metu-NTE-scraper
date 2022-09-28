@@ -1,5 +1,5 @@
 import time
-import datetime
+from os.path import exists
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.select import Select
@@ -8,13 +8,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
 
-now = datetime.datetime.now()
-print ("Up to date as of : ")
-print (now.strftime("%Y-%m-%d %H:%M:%S\n"))
-
 start = time.time()
 
-# mld always creates problems for everyone
 def mld_switch(str):
     dict={
         "ARAB": "602",
@@ -45,110 +40,104 @@ def write_num(str):
             courseCode += c
     return courseCode
 
-
-NTE_URL = "https://muhfd.metu.edu.tr/en/nte-courses"
-
-site_package = "3i-Uh6Eddmrp6bYyWh70SAtQUE2UoAyMNIz4G0JZWB8qFIj0BwTKcGuJHGuHLz9q81RivLrzjR5p98b5-theyQ"
-semester="20221"
-class_codes = ["120", "121", "125", "230", "232", "233", "236", "240", "241", "310", "311", "312", "314", "410", "420",
-               "450", "453", "454", "602", "603", "604", "605", "606", "607", "608", "609", "610", "611", "612", "639",
-               "642", "643", "644", "651", "682", "831", "863"]
-dept_code="571"
-
-url1 = "https://sis.metu.edu.tr/get.php?package="
-url2 = "#/?selectSemester="
-url3="&selectProgram="
-url4 = "&selectDepartmentOfCourse%5B%5D="
-url5="&submitSearchForm=Search&stamp=DAfsr9hLq3WKfFAoHCjV4PUiC-Q3vgWwNQaHZX6hQ4dr2qCbJ9o5xcR_LjW9ZGyE3cwLd5fr9ksSXa1an--EEA"
-
-course_set=set()
-
 driver = webdriver.Chrome()
 driver.maximize_window()
 action = ActionChains(driver)
 
+#########################################################
+# change myDEPT to your department
+# delete departments that you dont want to take courses from the class_codes list
+myDEPT='CENG'
+class_codes = [ "120", "121", "125", "230", "232", "233", "236", "240", "241", "310", "311", "312", "314", "410", "420", "450", "453","602", "603", "604", "605", "606", "607", "608","610", "611", "612", "639","642", "643", "644", "651", "682", "831", "863"]
+#########################################################
 
+
+NTE_codes=set()
+if exists("./NTE_codes.txt"):
+    file = open("NTE_codes.txt", "r")
+    for course_code in file.readline().split():
+        NTE_codes.add(course_code)
+else:
+    file = open("NTE_codes.txt", "w")
+    NTE_URL = "https://muhfd.metu.edu.tr/en/nte-courses"
+    driver.get(NTE_URL)
+    rows = driver.find_elements(By.XPATH, '//*[@id="content"]/article/div[2]/table/tbody/tr')
+    for i in rows:
+        cols = i.find_elements(By.TAG_NAME, 'td')
+        # getting link and course_code
+        class_code = write_num(cols[0].text)
+        if (int(class_code) >= 603 and int(class_code) <= 639):
+            continue
+        i.click()
+
+        if (int(class_code) != 602):
+            course_table = WebDriverWait(driver, 10).until(
+                EC.presence_of_all_elements_located((By.XPATH, '//*[@id="content"]/article/div[2]/table/tbody/tr')))[1:]
+            for course in course_table:
+                course_code = write_num(course.find_elements(By.TAG_NAME, 'td')[0].text)
+                full_code = class_code + ("0" if len(course_code) == 3 else "") + course_code
+                NTE_codes.add(full_code)
+                file.write(full_code + " ")
+        else:  # mld specific case their xpath and table structure are different
+            course_table = WebDriverWait(driver, 10).until(
+                EC.presence_of_all_elements_located((By.XPATH, '//*[@id="content"]/div[2]/table/tbody/tr')))[1:]
+            for course in course_table:
+                course_name = course.find_elements(By.TAG_NAME, 'td')[0].text
+                course_code = write_num(course_name)
+                class_code = mld_switch(course_name)
+                full_code = class_code + ("0" if len(course_code) == 3 else "") + course_code
+                NTE_codes.add(full_code)
+                file.write(full_code+" ")
+        driver.back()
+
+url = "https://oibs2.metu.edu.tr/View_Program_Course_Details_64/"
 
 #################################
-driver.get(NTE_URL)
-rows = driver.find_elements(By.XPATH,'//*[@id="content"]/article/div[2]/table/tbody/tr')
-for i in rows:
-    cols=i.find_elements(By.TAG_NAME,'td')
-    # getting link and course_code
-    class_code=write_num(cols[0].text)
-    if (int(class_code)>=603 and int(class_code)<=639):
-        continue
-    driver.execute_script("arguments[0].scrollIntoView();", cols[0])
-    cols[0].click()
-
-    if(int(class_code)!=602):
-        course_table=WebDriverWait(driver,10).until(EC.presence_of_all_elements_located((By.XPATH,'//*[@id="content"]/article/div[2]/table/tbody/tr')))[1:]
-        for course in course_table:
-            course_code = write_num(course.find_elements(By.TAG_NAME, 'td')[0].text)
-            full_code = class_code + ("0" if len(course_code) == 3 else "") + course_code
-            course_set.add(full_code)
-    else:           # mld specific case their xpath and table structure are different
-        course_table = WebDriverWait(driver, 10).until(EC.presence_of_all_elements_located((By.XPATH, '//*[@id="content"]/div[2]/table/tbody/tr')))[1:]
-        for course in course_table:
-            course_name=course.find_elements(By.TAG_NAME, 'td')[0].text
-            course_code = write_num(course_name)
-            class_code = mld_switch(course_name)
-            full_code = class_code + ("0" if len(course_code) == 3 else "") + course_code
-            course_set.add(full_code)
-    driver.back()
-
-end = time.time()
-print("all NTEs recorded in : ",end-start," seconds")
-#################################
-
-
-first_time = True
+driver.get(url)
+#<option value="572">Aerospace Engineering/Havacılık ve Uzay Mühendisliği </option>
 for class_code in class_codes:
+    el2=driver.find_element(By.CSS_SELECTOR,'option[value="'+class_code+'"]')
+    print(el2.text)
+    el2.click()
+    driver.find_element(By.XPATH,'//*[@id="single_content"]/form/table[3]/tbody/tr/td/input').click()
+    table=WebDriverWait(driver,10).until(EC.presence_of_all_elements_located((By.XPATH,'//*[@id="single_content"]/form/table[4]/tbody/tr')))[1:]
+    for i in range(0,len(table)):
+        row=table[i]
+        try:
+            column=row.find_element(By.XPATH,"./td[2]")
+        except:
+            table = WebDriverWait(driver,10).until(EC.presence_of_all_elements_located((By.XPATH,'//*[@id="single_content"]/form/table[4]/tbody/tr')))[1:]
+            row = table[i]
+            column = row.find_element(By.XPATH, "./td[2]")
+        if column.text in NTE_codes:
+            rowTEXT=row.text
+            #clicking course
+            row.find_element(By.XPATH,"./td[1]/font/input").click()
+            driver.find_element(By.XPATH,'//*[@id="single_content"]/form/table[2]/tbody/tr/td[1]/input').click()
+            #clicking to sections
+            sections=WebDriverWait(driver,10).until(EC.presence_of_all_elements_located((By.CSS_SELECTOR,'input[name=submit_section]')))
+            for j in range(0,len(sections)):
+                section=sections[j]
+                try:
+                    section.click()
+                except:
+                    sections = WebDriverWait(driver, 10).until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, 'input[name=submit_section]')))
+                    section = sections[j]
+                    section.click()
+                fm = WebDriverWait(driver,10).until(EC.presence_of_element_located((By.ID,"formmessage")))
+                #fm = driver.find_elements(By., "There is no")
+                if fm.text=="There is no section criteria to take the selected courses for this section.":
+                    print("ALL","\t",rowTEXT,j+1)
 
-    old_url = driver.current_url
-    driver.get(url1 + site_package + url2 + semester+ url3 + class_code + url4 +dept_code +url5)
-    WebDriverWait(driver, 10).until(lambda url_check: driver.current_url != old_url)
-    driver.find_element(By.TAG_NAME, 'body').send_keys(Keys.CONTROL + Keys.HOME)
-
-    # searched
-    WebDriverWait(driver, 10).until(EC.element_to_be_clickable(("xpath", '//*[@id="submitSearchForm"]'))).click()
-    time.sleep(0.5)
-
-    if first_time:
-        first_time = False
-        # all entries selected
-        drop_mask = WebDriverWait(driver, 10).until(
-            EC.element_to_be_clickable((By.ID, 's2id_autogen4')))
-        driver.execute_script("arguments[0].scrollIntoView()",
-                              driver.find_element(By.XPATH, '//*[@id="row_"]/div/div/div[2]/div/div[1]/div[2]'))
-        action.move_to_element(drop_mask).click().perform()
-
-        drop_button = WebDriverWait(driver, 10).until(
-            EC.element_to_be_clickable((By.XPATH, '//*[@id="select2-drop"]/ul/li[4]/div')))
-        action.move_to_element(drop_button).click().perform()
-
-        # columns
-        column = WebDriverWait(driver, 10).until(
-            EC.element_to_be_clickable((By.XPATH, '//*[@id="okzTools_SearchResults"]/div')))
-        column.click()
-        WebDriverWait(driver, 10).until(
-            EC.element_to_be_clickable((By.XPATH, '//*[@id="SearchResults_column_toggler"]/label[1]/div'))).click()
-        WebDriverWait(driver, 10).until(
-            EC.element_to_be_clickable((By.XPATH, '//*[@id="SearchResults_column_toggler"]/label[7]/div'))).click()
-        WebDriverWait(driver, 10).until(
-            EC.element_to_be_clickable((By.XPATH, '//*[@id="SearchResults_column_toggler"]/label[8]/div'))).click()
-
-    # print department name
-    dep_name=WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.XPATH, '//*[@id="s2id_selectProgram"]/a/span[1]'))).text
-    print(dep_name)
-
-    # print table
-    table = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, 'SearchResults'))).text
-    for row in table.splitlines()[1:]:
-        if len(row)>7 and (row[:7] in course_set):
-            print(row)
-    print("")
+                table2=driver.find_elements(By.XPATH,'//*[@id="single_content"]/form/table[3]/tbody/tr')[1:]
+                for row2 in table2:
+                    dept=row2.find_element(By.XPATH,'./td[1]').text
+                    if dept=='ALL' or dept==myDEPT:
+                        print(dept,"\t",rowTEXT,j+1)
+                        break
+                driver.back()
+            driver.back()
+    driver.back()
 
 driver.quit()
 
