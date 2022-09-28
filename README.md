@@ -34,12 +34,11 @@ chromedriver --version
 ```
 ## Options
 Before running the code make sure you change the below variables inside `main.py` to neccessary values:
-* dept_code (contains department code to help find courses given to that department)(default value set for ceng change it to your department's code)
+* myDEPT (contains department abbreviation to help find courses given to that department)(default value set for ceng change it to your department's code)
 * class_codes (contains departments that give NTE courses)(you can delete the deprtment numbers that you do not want in your list)
-* semester (contains year and semester for example currently set to 20221 meaning 2022-2023 fall)(change according to current semester)
 
 ## Running the code
-Use below line to scrape current NTE list(it takes about 2 minutes)
+Use below line to scrape current NTE list(it takes about 6 minutes)
 ```
 python main.py >output
 ```
