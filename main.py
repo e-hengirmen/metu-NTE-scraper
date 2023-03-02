@@ -100,6 +100,14 @@ for class_code in class_codes:
     print(el2.text)
     el2.click()
     driver.find_element(By.XPATH,'//*[@id="single_content"]/form/table[3]/tbody/tr/td/input').click()
+
+    #-----------------------fail check---------------
+    fm = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "formmessage")))
+    # fm = driver.find_elements(By., "There is no")
+    if fm.text == "Information about the department could not be found.":
+        continue
+    #-----------------------------------------------
+
     table=WebDriverWait(driver,10).until(EC.presence_of_all_elements_located((By.XPATH,'//*[@id="single_content"]/form/table[4]/tbody/tr')))[1:]
     for i in range(0,len(table)):
         row=table[i]
