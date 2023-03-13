@@ -9,13 +9,17 @@ from selenium.webdriver.common.action_chains import ActionChains
 import winsound
 from selenium.webdriver.support.ui import WebDriverWait
 
+import os
+import urllib.request
+import predict
+
 #########################################################
 # change myDEPT to your department
 # delete departments that you dont want to take courses from the class_codes list
 myDEPT      = 'CENG'
 class_codes = [ "120", "121", "125", "230", "232", "233", "236", "240", "241", "310", "311", "312", "314", "410", "420", "450", "453","602", "603", "604", "605", "606", "607", "608","610", "611", "612", "639","642", "643", "644", "651", "682", "831", "863"]
-Username    = "e123456"     #fill your metu username
-Password    = "##########"    #fill your password
+Username    = "e246801"     #fill your metu username
+Password    = "DORGA1.dorga"    #fill your password
 #########################################################
 
 start = time.time()
@@ -27,7 +31,6 @@ if not exists("out2.txt"):
     quit()
 # opening course window
 url  = "https://student.metu.edu.tr/"
-url2 = "https://images.google.com"
 driver = webdriver.Chrome()
 driver.maximize_window()
 driver.get(url)
@@ -35,14 +38,6 @@ driver.find_element(By.LINK_TEXT,"View Course Capacity (158)").click()
 WebDriverWait(driver,10).until(EC.presence_of_element_located((By.ID,"textUsername"))).send_keys(Username)
 WebDriverWait(driver,10).until(EC.presence_of_element_located((By.ID,"textPassword"))).send_keys(Password)
 WebDriverWait(driver,10).until(EC.presence_of_element_located((By.XPATH,'//*[@id="signinForm"]/fieldset/div[3]/div/button[1]'))).click()
-
-
-
-driver.switch_to.new_window('tab')
-driver.switch_to.window(driver.window_handles[0])
-
-
-
 
 iframe = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.TAG_NAME, "iframe")))  # its in the first frame
 driver.switch_to.frame(iframe)
@@ -68,32 +63,13 @@ while True:
         while captcha_fails:
             # change to frame enter course code and get image url
 
+            # download and solve captcha
             captcha_url = WebDriverWait(driver, 10).until(EC.presence_of_element_located(
                 (By.XPATH, '//*[@id="SignInFormDiv"]/form/fieldset/div[2]/div[1]/img'))).get_attribute("src")
+            urllib.request.urlretrieve(captcha_url, 'temp_captcha.jpg')
+            captcha_result=predict.predict_captcha('temp_captcha.jpg')
+            os.remove('temp_captcha.jpg')
 
-            # find captcha result from basic google image search
-            driver.switch_to.window(driver.window_handles[1])
-            driver.get(url2)
-            driver.find_element(By.XPATH, "/html/body/div[1]/div[3]/form/div[1]/div[1]/div[1]/div/div[3]/div[4]").click()
-            WebDriverWait(driver, 10).until(EC.presence_of_element_located(
-                (By.XPATH, '//*[@id="ow6"]/div[3]/c-wiz/div[2]/div/div[3]/div[2]/c-wiz/div[2]/input'))).send_keys(
-                captcha_url)
-            WebDriverWait(driver, 10).until(EC.presence_of_element_located(
-                (By.XPATH, '//*[@id="ow6"]/div[3]/c-wiz/div[2]/div/div[3]/div[2]/c-wiz/div[2]/div'))).click()
-            WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '//*[@id="ucj-5"]/span[1]'))).click()
-            try:
-                captcha_result = WebDriverWait(driver, 4).until(EC.presence_of_element_located((By.XPATH,'//*[@id="yDmH0d"]/div[3]/c-wiz/div/c-wiz/c-wiz/div/div[2]/div/div/div/div[1]/div/div[3]/div/div/div'))).text
-
-            except:
-                captcha_result = "0"
-
-            captcha_result = ''.join(filter(str.isdigit,captcha_result))[0:6]
-
-            driver.switch_to.window(driver.window_handles[0])
-            if len(captcha_result)!=6 :
-                captcha_result="0"
-
-            driver.switch_to.frame(iframe)
             input_course = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "text_course_code")))
             input_captcha = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "text_img_number")))
             input_course.clear()
