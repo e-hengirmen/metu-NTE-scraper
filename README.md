@@ -3,6 +3,9 @@ Metu NTE scraper project was created for educational proposes and community need
 1. `main.py` that collects the NTE's given to ur department
 2. `NewCourseAlarm.py` that alerts the user if there are new courses that are given to ur department(uses "out2.txt")
 3. `capacityCheck.py` that searches through courses given to ur department and finds those with unused capacity(uses "out2.txt")
+
+Note: `capacityCheck.py` uses the CNN model [Basic-number-captcha-solver](https://github.com/e-hengirmen/Basic-number-captcha-solver/edit/master/README.md) that was specifically developed to be used in this scraper. The current model works with 99.8% accuracy.
+
 ## Getting Started
 These instructions will help you list Non-Technical Elective courses given to your department in the current semester
 ## Prerequisites
@@ -56,5 +59,3 @@ After the creation of `out2.txt` use below command to check for capacities of th
 ```
 python capacityCheck.py
 ```
-
-Edit: Added a CNN classifier to the capacity checker with 99.8% accuracy. Currently there are no problems.
