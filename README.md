@@ -57,4 +57,4 @@ After the creation of `out2.txt` use below command to check for capacities of th
 python capacityCheck.py
 ```
 
-Note: Capacity Checker is quite slow because it externaly checks captchas which is both slow and unreliable. But it works :). I plan to change it with a basic MLP classifier in the near future
+Edit: Added a CNN classifier to the capacity checker with 99.8% accuracy. Currently there are no problems.
