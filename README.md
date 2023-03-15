@@ -11,7 +11,7 @@ These instructions will help you list Non-Technical Elective courses given to yo
 ## Prerequisites
 Python 3.x  
 Google Chrome   
-selenium - An API for python to write functional/acceptance tests using Selenium WebDriver.
+selenium - An API for python to write functional/acceptance tests using Selenium WebDriver.  
 Tensorflow - A free open-source library for AI and machine learning applications
 
 you can install selenium with either pip:
