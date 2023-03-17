@@ -23,7 +23,7 @@ Before running the code make sure you change the below variables inside `main.py
 * For `main.py` and `NewCourseAlarm.py`
   * myDEPT (contains department abbreviation to help find courses given to that department)(default value set for ceng change it to your department's code)
   * class_codes (contains departments that give NTE courses)(you can delete the department numbers that you do not want in your list)
-* For `NewCourseAlarm.py`
+* For `capacityCheck.py`
   * Username (fill your metu username)(It is only used to access metu capacity checker which is unaccessable withput a username and password)
   * Password (fill your metu password))(It is only used to access metu capacity checker which is unaccessable withput a username and password)
 ## Running the code
