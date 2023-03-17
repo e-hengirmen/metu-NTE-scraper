@@ -39,6 +39,8 @@ After the creation of `out2.txt` use below command to check for capacities of th
 ```
 python capacityCheck.py
 ```
-## How does it work
-You can see how it looks when `capacityCheck.py` is running from below gif.
+## How it collects
+`capacityCheck.py` simulates the user using selenium.  
+The program first goes into the course capacity section by entering user's password and username . After this point until every course in "out2.txt" is exhausted it answers captchas by first uploading the captcha image which is send to the CNN model provided which solves the captcha and the result gets sent back to the browser.  
+You can see how it looks when `capacityCheck.py` is running from below gif. 
 ![](media/capacityRunning.gif)
