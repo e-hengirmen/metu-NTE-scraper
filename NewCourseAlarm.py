@@ -9,6 +9,8 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
 import winsound
 
+from webdriver_manager.chrome import ChromeDriverManager
+
 #########################################################
 # change myDEPT to your department
 # delete departments that you dont want to take courses from the class_codes list
@@ -57,7 +59,7 @@ def write_num(str):
             courseCode += c
     return courseCode
 
-driver = webdriver.Chrome()
+driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
 driver.maximize_window()
 action = ActionChains(driver)
 

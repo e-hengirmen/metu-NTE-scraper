@@ -8,6 +8,8 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.ui import WebDriverWait
 
+from webdriver_manager.chrome import ChromeDriverManager
+
 import os
 import urllib.request
 import predict
@@ -30,7 +32,7 @@ if not exists("out2.txt"):
     quit()
 # opening course window
 url  = "https://student.metu.edu.tr/"
-driver = webdriver.Chrome()
+driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
 driver.maximize_window()
 driver.get(url)
 driver.find_element(By.LINK_TEXT,"View Course Capacity (158)").click()
