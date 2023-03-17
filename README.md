@@ -39,3 +39,6 @@ After the creation of `out2.txt` use below command to check for capacities of th
 ```
 python capacityCheck.py
 ```
+## How does it work
+You can see how it looks when `capacityCheck.py` is running from below gif.
+![](media/capacityRunning.gif)
