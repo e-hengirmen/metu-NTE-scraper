@@ -1,5 +1,5 @@
 # Metu NTE scraper
-Metu NTE scraper project was created for educational proposes and community needs. It comprises of 3 tools for 3 different jobs:
+Metu NTE scraper project was created for educational purposes and community needs. It comprises of 3 tools for 3 different jobs:
 1. `main.py` that collects the NTE's given to ur department
 2. `NewCourseAlarm.py` that alerts the user if there are new courses that are given to ur department(uses "out2.txt")
 3. `capacityCheck.py` that searches through courses given to ur department and finds those with unused capacity(uses "out2.txt")
