@@ -16,38 +16,6 @@ from webdriver_manager.chrome import ChromeDriverManager
 start = time.time()
 
 
-def mld_switch(str):
-    dict = {
-        "ARAB": "602",
-        "FREN": "603",
-        "GERM": "604",
-        "JA": "605",
-        "ITAL": "606",
-        "RUS": "607",
-        "SPAN": "608",
-        "HEB": "609",
-        "GRE": "610",
-        "GREEK": "610",
-        "CHN": "611",
-        "PERS": "612",
-        "ENG": "639"
-    }
-    courseName = ""
-    for c in str:
-        if c == ' ' or c.isdigit():
-            break
-        courseName += c
-    return dict[courseName]
-
-
-def write_num(str):
-    courseCode = ""
-    for c in str:
-        if c.isdigit():
-            courseCode += c
-    return courseCode
-
-
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
 driver.maximize_window()
 action = ActionChains(driver)
