@@ -9,10 +9,13 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.ui import WebDriverWait
 
 from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.service import Service
 
 import os
 import urllib.request
 import predict
+
+os.environ['CUDA_VISIBLE_DEVICES'] = ''
 
 #########################################################
 # change myDEPT to your department
