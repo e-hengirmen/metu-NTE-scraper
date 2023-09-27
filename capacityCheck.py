@@ -47,7 +47,15 @@ iframe = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.TAG_
 driver.switch_to.frame(iframe)
 
 # checking capacity for every course
-file_existing = open("out2.txt", encoding="utf8")
+for encoding in ['utf-8','utf-8-iso','iso-8859-1','cp1252']:
+    try:
+        file_existing = open("out2.txt", encoding=encoding)
+        temp = file_existing.readlines()
+        file_existing.close()
+        file_existing = open("out2.txt", encoding=encoding)
+        break
+    except:
+        pass
 course_code="0"
 while True:
     course_current_sections=[]
