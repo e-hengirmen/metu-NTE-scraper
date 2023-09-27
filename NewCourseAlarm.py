@@ -7,6 +7,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.chrome.service import Service
 import winsound
 
 from webdriver_manager.chrome import ChromeDriverManager
@@ -21,7 +22,19 @@ class_codes = [ "120", "121", "125", "230", "232", "233", "236", "240", "241", "
 start = time.time()
 
 existing_codes=set()
-file_existing = open("out2.txt", encoding="utf8")
+file_existing = None
+for encoding in ['utf-8','utf-8-iso','iso-8859-1','cp1252']:
+    try:
+        file_existing = open("out2.txt", encoding=encoding)
+        temp = file_existing.readlines()
+        file_existing.close()
+        file_existing = open("out2.txt", encoding=encoding)
+        break
+    except:
+        pass
+if not file_existing:
+    print("out2.txt file encoding error")
+    exit()
 while True:
     line = file_existing.readline().split()
     if not line:
@@ -122,12 +135,11 @@ while True:
         driver.find_element(By.XPATH,'//*[@id="single_content"]/form/table[3]/tbody/tr/td/input').click()
 
         # -----------------------fail check---------------
-        fm = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "formmessage")))
+        fm = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, "#formmessage > font > b")))
         # fm = driver.find_elements(By., "There is no")
         if fm.text == "Information about the department could not be found.":
             continue
         # -----------------------------------------------
-
         table=WebDriverWait(driver,10).until(EC.presence_of_all_elements_located((By.XPATH,'//*[@id="single_content"]/form/table[4]/tbody/tr')))[1:]
         for i in range(0,len(table)):
             row=table[i]
