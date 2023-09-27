@@ -18,6 +18,12 @@ you can install necessary packages with(including selenium and tensorflow):
 ```
 sudo pip3 install -r requirements.txt
 ```
+If u encounter any problems apply these commands:
+```
+pip install selenium webdriver_manager
+python3 -m pip install webdriver-manager --upgrade
+python3 -m pip install packaging
+```
 ## Options
 Before running the code make sure you change the below variables inside `main.py` to neccessary values:
 * For `main.py` and `NewCourseAlarm.py`
